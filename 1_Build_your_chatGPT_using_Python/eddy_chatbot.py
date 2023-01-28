@@ -12,7 +12,7 @@ Eddy_API_KEY = os.environ['API_KEY']
 openai.api_key = Eddy_API_KEY 
 
 start_sequence = "\AI:"
-restart_sequence = "\Human:"
+restart_sequence = "\Humano:"
 
 prompt = "Digita aqui para começar uma conversa com um assistente de AI: "
 
@@ -28,14 +28,14 @@ def openai_create(prompt):
            prompt = prompt, # Prompt, fornecido para a função como um argumento. Ponto de partida para a geração de texto.
            temperature = 0.9, # Controla a aleatoriedade do texto gerado
            # Uma temperatura mais alta resultará em respostas mais variadas e criativas, enquanto uma temperatura mais baixa resultará em respostas mais previsíveis.
-           max_tokens=150, # Número máximo de tokens (palavras individuais ou sinais de pontuação) que devem ser gerados na resposta. 
+           max_tokens=300, # Número máximo de tokens (palavras individuais ou sinais de pontuação) que devem ser gerados na resposta. 
            top_p=1, # Controla a probabilidade de gerar respostas mais comuns.
            # Um valor mais alto resultará em respostas mais comuns, enquanto um valor mais baixo permitirá respostas mais variadas.
            frequency_penalty=0, # Controla a probabilidade de gerar respostas menos comuns.
            # Um valor mais alto resultará em respostas menos comuns, enquanto um valor mais baixo permitirá respostas mais comuns.
            presence_penalty=0.6, # Controla a probabilidade de gerar respostas que contenham palavras ou frases específicas.
            # Um valor mais alto resultará em respostas com maior probabilidade de conter essas palavras ou frases, enquanto um valor mais baixo permitirá respostas mais variadas.
-           stop=[" Human:", " AI:"] # Este parâmetro especifica uma lista de palavras ou frases que interromperão a geração de texto quando encontradas.
+           stop=[" Humano:", " AI:"] # Este parâmetro especifica uma lista de palavras ou frases que interromperão a geração de texto quando encontradas.
            # Nesse caso, a geração de texto será interrompida quando as palavras "Human:" ou "AI:" forem encontradas.
        ) 
     return response.choices[0].text # Você acessa o text atributo do choices[0] elemento do objeto response. 
@@ -59,4 +59,4 @@ with block:
     submit = gr.Button("SEND")
     submit.click(chatgpt_clone, inputs=[message, state], outputs=[chatbot, state])
     
-block.launch(debug = True)
+block.launch(debug = True, share=True)
