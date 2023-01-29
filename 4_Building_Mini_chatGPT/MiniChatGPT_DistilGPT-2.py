@@ -44,6 +44,7 @@ A tokenização é o processo de dividir o texto em palavras ou subpalavras indi
 Isso pode ser feito usando uma biblioteca como tokenizers NLTK ou Hugging Face.
 '''
 
+
 import transformers
 from transformers import AutoTokenizer
 
@@ -65,4 +66,42 @@ ambos compostos por várias camadas de Redes Neurais de Multi-head de self-atten
 '''
 
 
+from transformers import AutoModelWithLMHead
 
+# Instanciamos o Modelo
+model = AutoModelWithLMHead.from_pretrained("distilgpt2")
+
+
+'''
+Step 4: Trainamento
+
+Depois que a arquitetura do modelo é projetada, o modelo pode ser treinado.
+Isso envolve alimentar o texto tokenizado no modelo e ajustar os parâmetros do modelo para minimizar
+a diferença entre a saída do modelo e a saída esperada.
+'''
+
+
+from transformers import TrainingArguments, Trainer
+
+# Define training arguments
+training_args = TrainingArguments(
+    output_dir='./results',
+    evaluation_strategy='steps',
+    eval_steps = 1000,
+    per_device_train_batch_size=1,
+    per_device_eval_batch_size=1,
+    num_train_epochs=1,
+    save_steps=1000,
+    save_total_limit=2
+)
+
+# Instantiate a trainer
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_text,
+    eval_dataset=tokenized_text
+)
+
+# Train the model
+trainer.train()
