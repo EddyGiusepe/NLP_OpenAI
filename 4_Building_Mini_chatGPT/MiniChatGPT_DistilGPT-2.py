@@ -16,24 +16,24 @@ import pandas as pd
 
 # Load data into a pandas dataframe
 data = pd.read_csv("train.csv")
-print(data.shape)
-print(data.columns)
-print('')
-print(data.head(7))
+#print(data.shape)
+#print(data.columns)
+#print('')
+#print(data.head(7))
 
 
 # Eliminando as colunas que não precissamos 
 data.drop(['question_id', 'question', 'document_title', 'label'], axis=1, inplace=True)
 # Renomeando o neme da coluna 'answer' para 'text'
 data.rename(columns={'answer': 'text'}, inplace=True)
-print(data.head(7))
+#print(data.head(7))
 
 # Pré-processamento dos Dados 
 data = data.dropna()  # Remove valores missing
 data = data.drop_duplicates()  # Remove valores duplicados 
-data = data.sample(frac=1)  # Shuffle (embaralhar) os dados 
-print(data.shape)
-print(data.head(8))
+#data = data.sample(frac=1)  # Shuffle (embaralhar) os dados 
+#print(data.shape)
+#print(data.head(8))
 
 
 '''
@@ -50,9 +50,11 @@ from transformers import AutoTokenizer
 
 # Instanciamos o Tokenizador
 tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
-
-# Tokenizamos os text
-text = data['text'].values
+#print(tokenizer.vocab)
+#tokenizer.pad_token = tokenizer.eos_token
+tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+# Tokenize the text
+text = str(data['text'].values)
 tokenized_text = tokenizer(text, padding=True, truncation=True)
 
 
@@ -66,10 +68,12 @@ ambos compostos por várias camadas de Redes Neurais de Multi-head de self-atten
 '''
 
 
-from transformers import AutoModelWithLMHead
-
+from transformers import AutoModelWithLMHead # --> No futuro está DEPRECATE
+#from transformers import AutoModelForCausalLM 
 # Instanciamos o Modelo
 model = AutoModelWithLMHead.from_pretrained("distilgpt2")
+#model = AutoModelForCausalLM.from_pretrained("distilgpt2")
+
 
 
 '''
@@ -83,19 +87,19 @@ a diferença entre a saída do modelo e a saída esperada.
 
 from transformers import TrainingArguments, Trainer
 
-# Define training arguments
+# Definimos os parâmetros do treinamento
 training_args = TrainingArguments(
     output_dir='./results',
     evaluation_strategy='steps',
     eval_steps = 1000,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
-    num_train_epochs=1,
+    num_train_epochs=3,
     save_steps=1000,
     save_total_limit=2
 )
 
-# Instantiate a trainer
+# Instanciamos nosso Treinador (a Classe Trainer)
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -103,5 +107,5 @@ trainer = Trainer(
     eval_dataset=tokenized_text
 )
 
-# Train the model
+# Treninado nosso Modelo
 trainer.train()
