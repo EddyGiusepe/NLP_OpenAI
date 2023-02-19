@@ -94,8 +94,6 @@ completion = openai.Completion.create(engine = model_engine,
                                       max_tokens = 1024,
                                       temperature = 0.8)
 
-print(completion)
-
 '''
 A função "Completion.create()" recebe os seguintes argumentos:
 
@@ -108,12 +106,25 @@ A função "Completion.create()" recebe os seguintes argumentos:
 
 * temperature — um valor entre 0 e 1. Um valor mais baixo torna a saída mais determinística. 
                 Se você definir um valor mais alto, como 0.8, é mais provável que a saída seja diferente quando você chamar a função várias vezes.
+
+Ver informações sobre TOKENS: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 '''
 
+print(completion)
 
+'''
+O resultado (print de completion) em JSON que contém inúmeras informações. Em particular, o valor da chave "choices" é um array,
+cujo primeiro elemento contém o resultado que queremos, armazenado na chave "text".
+'''
+message = completion.choices[0].text
+print(message)
 
+'''
+Fazendo com que o usuário pergunte ao ChatGPT
 
-
+Agora que você pode interagir com o ChatGPT usando Python, vamos modificar um pouco nosso código para que
+nossos usuários possam interagir diretamente com o ChatGPT:
+'''
 
 
 
