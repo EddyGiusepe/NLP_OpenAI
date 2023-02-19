@@ -123,21 +123,16 @@ print(message)
 Fazendo com que o usuário pergunte ao ChatGPT
 
 Agora que você pode interagir com o ChatGPT usando Python, vamos modificar um pouco nosso código para que
-nossos usuários possam interagir diretamente com o ChatGPT:
+nossos usuários possam interagir diretamente com o ChatGPT.
 '''
+# Usando o ChatGPT para gerar texto
+model_engine = "text-davinci-003"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+while True:
+    prompt = input('\nSou o ChatGPT, em que posso ajudá-lo: ')
+    completion = openai.Completion.create(engine = model_engine, 
+                                          prompt = prompt, 
+                                          max_tokens = 1024, 
+                                          temperature = 0.8)
+    message = completion.choices[0].text
+    print(message)
