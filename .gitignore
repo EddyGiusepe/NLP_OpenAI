@@ -132,3 +132,4 @@ dmypy.json
 venv_chatbot/
 .env 
 api_key.env
+.rasa/
